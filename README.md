@@ -2,7 +2,7 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/draca/atlassian-jira-servicedesk.svg)](https://hub.docker.com/r/draca/atlassian-jira-servicedesk/)
 [![Build Status](https://img.shields.io/docker/build/draca/atlassian-jira-servicedesk.svg)](https://hub.docker.com/r/draca/atlassian-jira-servicedesk/builds/)
-[![Docker Stars](https://img.shields.io/docker/stars/draca/atlassian-jira-servicedesk.svg)](https://hub.docker.com/r/draca/atlassian-jira-servicedeskk/)
+[![Docker Stars](https://img.shields.io/docker/stars/draca/atlassian-jira-servicedesk.svg)](https://hub.docker.com/r/draca/atlassian-jira-servicedesk/)
 
 This image enables you to run [Atlassian JIRA Service Desk](https://www.atlassian.com/software/jira/service-desk).
 
