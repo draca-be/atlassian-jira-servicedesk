@@ -11,6 +11,23 @@ else
     cp ${SERVERXML} ${SERVERXML}.orig
 fi
 
+# Set the timezone if needed
+TZ_FILE="/usr/share/zoneinfo/${CONTAINER_TZ}"
+
+if [ -n "${CONTAINER_TZ}" ] && [ -f ${TZ_FILE} ]; then
+    cp /${TZ_FILE} /etc/localtime
+    echo "${CONTAINER_TZ}" > /etc/timezone
+fi
+
+# Import certificates if any available
+find ${JIRA_CERTS} -name *.crt -print0 | while IFS= read -r -d $'\0' line; do
+    name=$(basename $line)
+
+    # Make sure if one exists it is deleted first
+    ${JAVA_HOME}/bin/keytool -delete -storepass changeit -noprompt -alias "${name}" -keystore ${JAVA_HOME}/jre/lib/security/cacerts 2>&1 >/dev/null
+    ${JAVA_HOME}/bin/keytool -import -storepass changeit -noprompt -alias "${name}" -keystore ${JAVA_HOME}/jre/lib/security/cacerts -file "${line}"
+done
+
 
 if [ -n "${JIRA_PROXY_NAME}" ]; then
     sed -i "s/port=\"8080\"/port=\"8080\" proxyName=\"${JIRA_PROXY_NAME}\"/g" ${SERVERXML}
@@ -29,6 +46,13 @@ if [ -n "${DISABLE_NOTIFICATIONS}" ]; then
     sed -i "s/\#DISABLE_NOTIFICATIONS/DISABLE_NOTIFICATIONS/g" ${SETENV}
 else
     sed -i "s/^DISABLE_NOTIFICATIONS/#DISABLE_NOTIFICATIONS/g" ${SETENV}
+fi
+
+if [ -n "${KEEP_ACCESS_LOGS}" ]; then
+    # Do nothing
+    echo "Enabling access logs"
+else
+    sed -i -e '1h;2,$H;$!d;g' -e 's:<Valve className="org.apache.catalina.valves.AccessLogValve"[^/]*/>::g' ${SERVERXML}
 fi
 
 if [ -n "${JVM_MINIMUM_MEMORY}" ]; then
