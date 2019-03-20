@@ -6,7 +6,9 @@
 
 This image enables you to run [Atlassian JIRA Service Desk](https://www.atlassian.com/software/jira/service-desk).
 
-It is based on [alpine-java](https://hub.docker.com/r/anapsix/alpine-java/) to provide an as small as possible image.
+It is based on Alpine Linux to provide an as small as possible image.
+* Versions prior to 7.12 (or service desk 3.15) use [alpine-java](https://hub.docker.com/r/anapsix/alpine-java/) to provide an Oracle JDK.
+* Starting from 7.13 (or service desk 3.16) [adoptopenjdk/openjdk8](https://hub.docker.com/r/adoptopenjdk/openjdk8/) is used since Atlassian supports OpenJDK from this version.
 
 # Notice
 
@@ -14,7 +16,7 @@ In order to set up the autogeneration of images the repositories had to be restr
 
 # Versions
 
-There are tags available for latest, latest major, latest minor and individual versions. If for example you want to run the latest 3.8 version, you can use draca/atlassian-jira-servicedesk:3.8
+There are tags available for latest, latest major, latest minor and individual versions. If for example you want to run the latest 3.15 version, you can use draca/atlassian-jira-servicedesk:3.15
 
 # Autogeneration
 
