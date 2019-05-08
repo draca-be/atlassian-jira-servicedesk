@@ -1,4 +1,16 @@
-FROM anapsix/alpine-java:8u181b13_jdk
+FROM adoptopenjdk/openjdk8:jdk8u212-b03-alpine
+
+
+RUN echo @edge http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
+    && echo @edge http://dl-cdn.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
+    && apk add --no-cache \
+    bash \
+    ttf-dejavu fontconfig && \
+    fc-cache -f
+
+
+ENV LD_LIBRARY_PATH=/usr/lib:/lib
+RUN ln -s /usr/lib/libfontconfig.so.1 /usr/lib/libfontconfig.so
 
 MAINTAINER draca <info@draca.be>
 
@@ -22,7 +34,9 @@ RUN apk add --no-cache curl tar shadow tzdata \
     && mkdir -p "${JIRA_HOME}" "${JIRA_INSTALL}" "${JIRA_CERTS}" \
     && curl -Ls ${JIRA_DOWNLOAD} | tar -xz --directory "${JIRA_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e "\njira.home=${JIRA_HOME}" >> "${JIRA_INSTALL}/atlassian-jira/WEB-INF/classes/jira-application.properties" \
-    && apk del curl tar shadow
+    && apk del curl tar shadow \
+    && chown -R ${RUN_USER}:${RUN_GROUP} "${JIRA_HOME}" "${JIRA_INSTALL}" "${JIRA_CERTS}"
+
 
 COPY "entrypoint.sh" "/"
 ENTRYPOINT ["/entrypoint.sh"]
